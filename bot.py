@@ -10,7 +10,6 @@ from info_file import info
 
 database = Database(host, dbname, user, password)
 
-
 @dp.message_handler(commands=['start'])
 async def add_user_id(msg: types.Message):
     id_user = msg.from_user.id

@@ -10,13 +10,14 @@ class Database:
     def add_users_id(self, id_):
 
         """Сохраняем айди пользователей"""
-
-        self.cursor.execute(f"SELECT user_id FROM users WHERE user_id = {id_}")
-        if self.cursor.fetchone() is None:
-            self.cursor.execute(f"INSERT INTO users (user_id, user_id_for_count) VALUES ({id_}, {id_})")
-            self.conn.commit()
-            return "Приветствую"
-        return "Приветствую"
+        try:
+            self.cursor.execute(f"SELECT user_id FROM users WHERE user_id = {id_}")
+            if self.cursor.fetchone() is None:
+                self.cursor.execute(f"INSERT INTO users (user_id, user_id_for_count) VALUES ({id_}, {id_})")
+                self.conn.commit()
+                return "Приветствую"
+        except:
+            return "Что-то пошло не так"
 
     def add_catigories(self, catigories, id_):
 
@@ -78,4 +79,3 @@ cursor.execute('''CREATE TABLE users(
 );''')
 conn.commit()
 """
-
