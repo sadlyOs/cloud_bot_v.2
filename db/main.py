@@ -22,45 +22,54 @@ class Database:
     def add_catigories(self, catigories, id_):
 
         """Сохраняем айди пользователей и названия категорий"""
-
-        self.cursor.execute(f"SELECT categories FROM users WHERE user_id = {id_} AND categories = '{catigories}'")
-        if self.cursor.fetchone() is None:
-            self.cursor.execute(f"INSERT INTO users (user_id, categories) VALUES ({id_}, '{catigories}')")
-            self.conn.commit()
-            return f"Категория {catigories} успешна создана"
-        return "Данная категория уже существует"
+        try:
+            self.cursor.execute(f"SELECT categories FROM users WHERE user_id = {id_} AND categories = '{catigories}'")
+            if self.cursor.fetchone() is None:
+                self.cursor.execute(f"INSERT INTO users (user_id, categories) VALUES ({id_}, '{catigories}')")
+                self.conn.commit()
+                return f"Категория {catigories} успешна создана"
+            return "Данная категория уже существует"
+        except:
+            return "Видать вас нет в базе, нажмите на /start"
 
     def add_id_photo(self, id_, catigories, id_photo):
 
         """Сохраняем айди пользователей, названия категорий, айди фоток и распределяем их по именаа категорий"""
+        try:
+            self.cursor.execute(f"SELECT categories FROM users WHERE user_id = {id_} AND categories = '{catigories}'")
+            if self.cursor.fetchone() is None:
+                return "Такой категории не существует"
 
-        self.cursor.execute(f"SELECT categories FROM users WHERE user_id = {id_} AND categories = '{catigories}'")
-        if self.cursor.fetchone() is None:
-            return "Такой категории не существует"
-
-        self.cursor.execute(
-            f"INSERT INTO users (user_id, categories, photo_id) VALUES ({id_}, '{catigories}', '{id_photo}')")
-        self.conn.commit()
-        return f"Фотография сохранена в категорию '{catigories}'"
+            self.cursor.execute(
+                f"INSERT INTO users (user_id, categories, photo_id) VALUES ({id_}, '{catigories}', '{id_photo}')")
+            self.conn.commit()
+            return f"Фотография сохранена в категорию '{catigories}'"
+        except:
+            return "Видать вас нет в базе, нажмите на /start"
 
     def print_photos(self, id_, catigories):
 
         """Выводим все фото по именям категорий"""
-
-        self.cursor.execute(f"SELECT categories FROM users WHERE user_id = {id_} AND categories = '{catigories}'")
-        if self.cursor.fetchone() is None:
-            return 0
-        list_photos = []
-        self.cursor.execute(f"SELECT photo_id FROM users WHERE user_id = {id_} AND categories = '{catigories}'")
-        for i in self.cursor.fetchall():
-            if i[0] is None:
-                continue
-            list_photos.append(i[0])
-        return list_photos
+        try:
+            self.cursor.execute(f"SELECT categories FROM users WHERE user_id = {id_} AND categories = '{catigories}'")
+            if self.cursor.fetchone() is None:
+                return 0
+            list_photos = []
+            self.cursor.execute(f"SELECT photo_id FROM users WHERE user_id = {id_} AND categories = '{catigories}'")
+            for i in self.cursor.fetchall():
+                if i[0] is None:
+                    continue
+                list_photos.append(i[0])
+            return list_photos
+        except:
+            return "Видать вас нет в базе, нажмите на /start"
 
     def info_count_users(self):
-        self.cursor.execute("SELECT COUNT(user_id_for_count) FROM users WHERE user_id_for_count != NULL")
-        return self.cursor.fetchone()
+        try:
+            self.cursor.execute("SELECT COUNT(user_id_for_count) FROM users WHERE user_id_for_count != NULL")
+            return self.cursor.fetchone()
+        except:
+            return "Видать вас нет в базе, нажмите на /start"
 
     def close(self):
         self.conn.close()
