@@ -12,10 +12,11 @@ database = Database(host, dbname, user, password)
 
 @dp.message_handler(commands=['start'])
 async def add_user_id(msg: types.Message):
-    id_user = msg.from_user.id
-    await msg.answer(database.add_users_id(id_user))
-    await msg.answer("Приветствую, введите /info,чтобы узнать о командах")
-
+    try:
+        id_user = msg.from_user.id
+        await msg.answer(database.add_users_id(id_user))
+    except:
+        await msg.answer("Что-то пошло не так")
 
 @dp.message_handler(commands=['add_photo'], state=None)
 async def get_photo_id(msg: types.Message):

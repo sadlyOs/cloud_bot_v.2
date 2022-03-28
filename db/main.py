@@ -1,4 +1,5 @@
 import psycopg2
+from psycopg2.errors import InFailedSqlTransaction
 from db.password import host, dbname, user, password
 
 
@@ -10,14 +11,12 @@ class Database:
     def add_users_id(self, id_):
 
         """Сохраняем айди пользователей"""
-        try:
-            self.cursor.execute(f"SELECT user_id FROM users WHERE user_id = {id_}")
-            if self.cursor.fetchone() is None:
-                self.cursor.execute(f"INSERT INTO users (user_id, user_id_for_count) VALUES ({id_}, {id_})")
-                self.conn.commit()
-                return "Приветствую"
-        except:
-            return "Что-то пошло не так"
+        self.cursor.execute(f"SELECT user_id FROM users WHERE user_id = {id_}")
+        if self.cursor.fetchone() is None:
+            self.cursor.execute(f"INSERT INTO users (user_id, user_id_for_count) VALUES ({id_}, {id_})")
+            self.conn.commit()
+            return "Приветствую, введите /info,чтобы узнать о командах"
+        return "Приветствую, введите /info,чтобы узнать о командах"
 
     def add_catigories(self, catigories, id_):
 
