@@ -10,13 +10,12 @@ from info_file import info
 
 database = Database(host, dbname, user, password)
 
+
 @dp.message_handler(commands=['start'])
 async def add_user_id(msg: types.Message):
-    try:
-        id_user = msg.from_user.id
-        await msg.answer(database.add_users_id(id_user))
-    except:
-        await msg.answer("Что-то пошло не так")
+    id_user = msg.from_user.id
+    await msg.answer(database.add_users_id(id_user))
+
 
 @dp.message_handler(commands=['add_photo'], state=None)
 async def get_photo_id(msg: types.Message):
