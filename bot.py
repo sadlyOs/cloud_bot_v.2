@@ -100,7 +100,7 @@ async def answer(call: types.CallbackQuery, state: FSMContext):
     list_photos = database.print_photos(ids, categories, keyid)  # Получаем возвращаемый список айди фотографий
     print(list_photos)
     if list_photos == 0:
-        await bot.send_message(id_, "Такой категории не существует")  # Если вместо списка получили ложный вызов
+        await bot.send_message(ids, "Такой категории не существует")  # Если вместо списка получили ложный вызов
     else:
         try:
             """Выводим все фотки с категории в альбомном виде"""
