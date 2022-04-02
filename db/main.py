@@ -76,6 +76,14 @@ class Database:
             list_categories.append(row[0])
         return list_categories
 
+    def del_categories(self, id_, categories):
+        """ Удаление категорий """
+
+        self.cursor.execute(
+            f"DELETE  FROM all_tg_users WHERE user_id = {id_} AND categories = '{categories}'")
+        self.conn.commit()
+        return f"Категория '{categories}' успешно удалена"
+
     def close(self):
         self.conn.close()
 

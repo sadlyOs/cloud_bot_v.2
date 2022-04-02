@@ -6,7 +6,7 @@ from aiogram.types import InputMediaPhoto
 from inline.inlinekey import create_choice, add_key
 from dispatchers import bot, dp
 from db.main import Database
-from states.State import States, State_s
+from states.State import States, State_s, State_del
 from info_file import info
 import hashlib
 
@@ -32,8 +32,14 @@ async def get_photo_id(call: types.CallbackQuery):
     """ Проверяем нажатие первой кнопки """
 
     global id_
-    id_ = call.from_user.id  # Получаем id_user
     await call.answer(cache_time=60)
+    id_ = call.from_user.id  # Получаем id_user
+    a = database.return_catigories(id_)
+    if not a:
+        await call.answer(
+            """Добавьте одну категорию,чтобы появилась клавиатура,после добавление ещё раз нажмите старт\n
+Чтобы посмотреть как создать категорию нажмие на /info""")
+        return
     await bot.send_message(call.from_user.id,
                            "Выберите категорею, в которой вы сохраните фото",
                            reply_markup=add_key(id_))  # Выводим категории в виде кнопок
@@ -69,11 +75,17 @@ async def save_photo(msg: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(text="buttton", state=None)
 async def choice(call: types.CallbackQuery, state: FSMContext):
-
     """Проверяем нажатие второй кнопки и выводим фотографии по выбранным категориям"""
 
     global ids
+    await call.answer(cache_time=60)
     ids = call.from_user.id
+    a = database.return_catigories(ids)
+    if not a:
+        await call.answer(
+            """Добавьте одну категорию,чтобы появилась клавиатура,после добавление ещё раз нажмите старт\n
+Чтобы посмотреть как создать категорию нажмие на /info""")
+        return
     await bot.send_message(call.from_user.id,
                            "Выберите категорею, в которой вы сохраните фото",
                            reply_markup=add_key(ids))
@@ -99,6 +111,25 @@ async def answer(call: types.CallbackQuery, state: FSMContext):
         except ValidationError:
             await bot.send_message(ids, "Чтобы вывести фоток в категории должно быть более 1 фото")
     await state.finish()
+
+
+@dp.callback_query_handler(text_contains='del', state=None)
+async def choice_butt(call: types.CallbackQuery):
+    """Проверяем нажатие второй кнопки и удаляем выбранную категорию"""
+
+    global id_s
+    await call.answer(cache_time=60)
+    id_s = call.from_user.id
+    await bot.send_message(id_s, "Выберите категорию для удаления", reply_markup=add_key(id_s))
+    await State_del.state1.set()
+
+
+@dp.callback_query_handler(lambda answ: answ.data in database.return_catigories(id_s), state=State_del.state1)
+async def cati_del(call: types.CallbackQuery, state: FSMContext):
+    categori = call.data
+    await call.answer(text=database.del_categories(id_s, categori), show_alert=True)
+    await state.finish()
+
 
 @dp.message_handler(commands=['info'])
 async def info_func(msg: types.Message):

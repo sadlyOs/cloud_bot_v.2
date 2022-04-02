@@ -8,3 +8,7 @@ class States(StatesGroup):
 
 class State_s(StatesGroup):
     state1 = State()
+
+
+class State_del(StatesGroup):
+    state1 = State()
