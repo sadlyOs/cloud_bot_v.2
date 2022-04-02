@@ -8,7 +8,7 @@ choice = InlineKeyboardMarkup(row_width=2)
 
 # Создаём кнопки
 def create_choice():
-    choice = InlineKeyboardMarkup(row_width=2)
+    choice = InlineKeyboardMarkup(row_width=3)
     inlin1 = InlineKeyboardButton("Добавить фото", callback_data='but1')
     inlin2 = InlineKeyboardButton("Вывести фото", callback_data='buttton')
     inlin3 = InlineKeyboardButton("Удалить категорию", callback_data='del')
