@@ -1,4 +1,5 @@
 import psycopg2
+from psycopg2 import InterfaceError
 from db.password import host, dbname, user, password
 
 
@@ -15,6 +16,7 @@ class Database:
         if self.cursor.fetchone() is None:
             self.cursor.execute(f"INSERT INTO all_tg_users (user_id, user_count) VALUES ({id_}, {id_})")
             return self.conn.commit()
+
         return
 
     def add_catigories(self, catigories, id_):
@@ -82,6 +84,7 @@ class Database:
         self.cursor.execute(
             f"DELETE  FROM all_tg_users WHERE user_id = {id_} AND categories = '{categories}'")
         self.conn.commit()
+        self.conn.close()
         return f"Категория '{categories}' успешно удалена"
 
     def close(self):

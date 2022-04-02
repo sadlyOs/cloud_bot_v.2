@@ -44,6 +44,7 @@ async def get_photo_id(call: types.CallbackQuery):
                            "Выберите категорею, в которой вы сохраните фото",
                            reply_markup=add_key(id_))  # Выводим категории в виде кнопок
     await States.state1.set()
+    await call.message.edit_reply_markup(reply_markup=None)
 
 
 @dp.callback_query_handler(lambda answ: answ.data in database.return_catigories(id_),
