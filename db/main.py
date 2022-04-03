@@ -1,6 +1,4 @@
 import psycopg2
-from psycopg2 import InterfaceError
-from db.password import host, dbname, user, password
 
 
 class Database:
@@ -84,19 +82,3 @@ class Database:
             self.conn.commit()
             return f"Категория '{categories}' успешно удалена, теперь, чтобы снова появилась клавиатура добавьте категорию или нажмите на /start"
 
-
-'''
-conn = psycopg2.connect(host=host, dbname=dbname, user=user, password=password)
-cursor = conn.cursor()
-
-cursor.execute("""CREATE TABLE all_tg_users(
-    id SERIAL PRIMARY KEY,
-    user_id BIGINT NOT NULL,
-    user_count BIGINT,
-    categories VARCHAR(200),
-    photo_id TEXT,
-    hash_id_photo TEXT,
-    key_id_photo BIGINT
-
-)""")
-conn.commit()'''
