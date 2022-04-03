@@ -63,7 +63,7 @@ async def save_photo(msg: types.Message, state: FSMContext):
     data = await state.get_data()
     answer1 = data.get("answer1")  # Получаем данные из answer1
     answer2 = msg.photo[0].file_id  # Получаем айди фотки
-    keyid = id_ - 10000 * 10  # Создаём ключ для расшифровки
+    keyid = ''  # Создаём ключ для расшифровки
     hash_id_photo = hashlib.md5(answer2.encode('utf-8'))  # Хэшируем айди фоток, используя md5
     await bot.send_message(id_,
                            database.add_id_photo(id_, answer1, keyid, hash_id_photo.hexdigest(),
@@ -96,7 +96,7 @@ async def choice(call: types.CallbackQuery, state: FSMContext):
                            state=State_s.state1)  # Проверяем название нажатой кнопки в списке категорий
 async def answer(call: types.CallbackQuery, state: FSMContext):
     categories = call.data  # Получаем айди категорий
-    keyid = ids - 10000 * 10  # Указываем ключ
+    keyid = ''  # Указываем ключ
     list_photos = database.print_photos(ids, categories, keyid)  # Получаем возвращаемый список айди фотографий
     print(list_photos)
     choice = create_choice()
@@ -131,7 +131,6 @@ async def choice_butt(call: types.CallbackQuery):
 async def cati_del(call: types.CallbackQuery, state: FSMContext):
     await call.message.edit_reply_markup(reply_markup=None)
     categori = call.data
-    a = database.return_catigories(id_s)
     await call.answer(text=database.del_categories(id_s, categori), show_alert=True)
     await state.finish()
 
